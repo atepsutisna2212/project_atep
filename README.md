@@ -1,5 +1,5 @@
-##Cara penggunaan aplikasi ini
-###Basis data yang digunakan
+## Cara penggunaan aplikasi ini
+### Basis data yang digunakan
 - Aplikasi ini menggunakan framework Laravel 10
 - Nama basis data = db_project_atep
 - Jika nama basis data sudah ada. Tinggal melakukan migrate dengan "php artisan migrate:fresh --seed"
