@@ -1,3 +1,12 @@
+##Cara penggunaan aplikasi ini
+#Basis data yang digunakan
+- Aplikasi ini menggunakan framework Laravel 10
+- Nama basis data = db_project_atep
+- Jika nama basis data sudah ada. Tinggal melakukan migrate dengan "php artisan migrate:fresh --seed"
+- Untuk menggunakan aplikasi ini ada user yang siap digunakan
+- email = atepsut@gmail.com
+- password = atepsut22
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
