@@ -7,6 +7,16 @@
 - email = atepsut@gmail.com
 - password = atepsut22
 
+## Cara kerja
+### Menu project
+- Pertama login terlebih dahulu dengan email dan password yang sudah terdaftar di basis data
+- Jika berhasil login maka memasuki tampilan dashboard dengan menu side bar disampingnya. Jika gagal maka akan tetap berada di form login
+- Pada menu project akan terlihat tabel project dan filter project serta beberapa fitur seperti tambah edit hapus cari
+- Pada fitur tambah maka akan muncul jendela form tambah
+- Pada fitur edit maka akan muncul jendela form edit
+- Pada fitur hapus hanya akan menghapus bari tabel yang sudah di centang
+- Pada fitur filter akan bekerja sebagaimana inputan form disampingnya
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
