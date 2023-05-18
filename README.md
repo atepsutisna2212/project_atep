@@ -1,4 +1,4 @@
-## Cara penggunaan aplikasi ini
+## Cara penggunaan aplikasi project atep
 ### Basis data yang digunakan
 - Aplikasi ini menggunakan framework Laravel 10
 - Nama basis data = db_project_atep
