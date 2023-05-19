@@ -94,6 +94,25 @@
         })
     </script>
 @endif
+
+@if ($errors->any())
+    @if (old('id'))
+        <script>
+            $(document).ready(function() {
+                $('#edit{{ old('id') }}').modal('show');
+            })
+        </script>
+    @else
+        <script>
+            $(document).ready(function() {
+                $('#new').modal('show');
+            })
+        </script>
+    @endif
+@endif
+{{-- @if ($errors->any())
+    
+@endif --}}
 </body>
 
 </html>

@@ -4,13 +4,13 @@
     <div class="card">
         <div class="card-header">
             <!-- Modal trigger button -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newUser">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new">
                 New
             </button>
 
             <!-- Modal Body -->
             <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
-            <div class="modal fade" id="newUser" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+            <div class="modal fade" id="new" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
                 role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md" role="document">
                     <div class="modal-content">
@@ -22,20 +22,35 @@
                         <form action="/user" method="post">
                             @csrf
                             <div class="modal-body">
+                                @if ($errors->any() && !old('id'))
+                                    @php
+                                        notifError($errors->all());
+                                        $name = old('name');
+                                        $email = old('email');
+                                        $password = old('password');
+                                    @endphp
+                                @else
+                                    @php
+                                        $name = '';
+                                        $email = '';
+                                        $password = '';
+                                    @endphp
+                                @endif
+
                                 <div class="form-floating mb-2">
                                     <input type="text" name="name" autofocus class="form-control" id="name"
-                                        placeholder="User name" value="{{ old('name') }}">
+                                        placeholder="User name" value="{{ $name }}">
                                     <label for="name">User name</label>
                                 </div>
                                 <div class="form-floating mb-2">
                                     <input type="email" name="email" autofocus class="form-control" id="email"
-                                        placeholder="User email" value="{{ old('email') }}">
+                                        placeholder="User email" value="{{ $email }}">
                                     <label for="email">User email</label>
                                 </div>
                                 <div class="form-floating mb-2">
-                                    <input type="text" name="password" autofocus class="form-control" id="password"
-                                        placeholder="User password" {{ old('password') }}>
-                                    <label for="password">User password</label>
+                                    <input type="text" name="password" autofocus class="form-control" id="pw"
+                                        placeholder="User password" {{ $password }}>
+                                    <label for="pw">User password</label>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -48,16 +63,6 @@
             </div>
         </div>
         <div class="card-body">
-            @if ($errors->any())
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
             <table id="tabel" class="table table-bordered border-dark">
                 <thead class="bg-info">
                     <tr>
@@ -77,13 +82,13 @@
                             <td>{{ $item->password2 }}</td>
                             <td>
                                 <button type="button" class="btn btn-warning me-2" data-bs-toggle="modal"
-                                    data-bs-target="#editUser{{ $item->id }}">
+                                    data-bs-target="#edit{{ $item->id }}">
                                     Edit
                                 </button>
 
                                 <!-- Modal Body -->
                                 <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
-                                <div class="modal fade" id="editUser{{ $item->id }}" tabindex="-1"
+                                <div class="modal fade" id="edit{{ $item->id }}" tabindex="-1"
                                     data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
                                     aria-labelledby="modalTitleId" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md"
@@ -97,24 +102,38 @@
                                             <form action="/user/{{ $item->id }}" method="post">
                                                 @csrf
                                                 <div class="modal-body">
+                                                    @if ($errors->any() && old('id') == $item->id)
+                                                        @php
+                                                            notifError($errors->all());
+                                                            $na = old('name');
+                                                            $em = old('email');
+                                                            $pa = old('pw');
+                                                        @endphp
+                                                    @else
+                                                        @php
+                                                            $na = $item->name;
+                                                            $em = $item->email;
+                                                            $pa = $item->password2;
+                                                        @endphp
+                                                    @endif
+                                                    <input type="hidden" name="id" value="{{ $item->id }}">
                                                     <div class="form-floating mb-2">
                                                         <input type="text" name="name" autofocus
-                                                            class="form-control" id="name"
-                                                            placeholder="User name" value="{{ $item->name }}">
+                                                            class="form-control" id="name" placeholder="User name"
+                                                            value="{{ $na }}">
                                                         <label for="name">User name</label>
                                                     </div>
                                                     <div class="form-floating mb-2">
                                                         <input type="email" name="email" autofocus
                                                             class="form-control" id="email"
-                                                            placeholder="User email" value="{{ $item->email }}">
+                                                            placeholder="User email" value="{{ $em }}">
                                                         <label for="email">User email</label>
                                                     </div>
                                                     <div class="form-floating mb-2">
                                                         <input type="text" name="password" autofocus
-                                                            class="form-control" id="password"
-                                                            placeholder="User password"
-                                                            value="{{ $item->password2 }}">
-                                                        <label for="password">User password</label>
+                                                            class="form-control" id="pw"
+                                                            placeholder="User password" value="{{ $pa }}">
+                                                        <label for="pw">User password</label>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">

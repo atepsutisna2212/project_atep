@@ -4,13 +4,13 @@
     <div class="card">
         <div class="card-header">
             <!-- Modal trigger button -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newClient">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new">
                 New
             </button>
 
             <!-- Modal Body -->
             <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
-            <div class="modal fade" id="newClient" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+            <div class="modal fade" id="new" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
                 role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md" role="document">
                     <div class="modal-content">
@@ -22,13 +22,25 @@
                         <form action="/client" method="post">
                             @csrf
                             <div class="modal-body">
+                                @if ($errors->any() && !old('id'))
+                                    @php
+                                        notifError($errors->all());
+                                        $client_name = old('client_name');
+                                        $client_address = old('client_address');
+                                    @endphp
+                                @else
+                                    @php
+                                        $client_name = '';
+                                        $client_address = '';
+                                    @endphp
+                                @endif
                                 <div class="form-floating mb-2">
-                                    <input type="text" name="client_name" autofocus class="form-control"
-                                        id="client_name" placeholder="client name" value="{{ old('client_name') }}">
+                                    <input type="text" name="client_name" autofocus required class="form-control"
+                                        id="client_name" placeholder="client name" value="{{ $client_name }}">
                                     <label for="client_name">Client name</label>
                                 </div>
                                 <div class="form-floating mb-2">
-                                    <textarea class="form-control"id="client_address" name="client_address" value="" required>{{ old('client_address') }}</textarea>
+                                    <textarea class="form-control"id="client_address" name="client_address">{{ $client_address }}</textarea>
                                     <label for="client_address">Clent Address</label>
                                 </div>
                             </div>
@@ -42,16 +54,6 @@
             </div>
         </div>
         <div class="card-body">
-            @if ($errors->any())
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
             <table id="tabel" class="table table-bordered border-dark">
                 <thead class="bg-info">
                     <tr>
@@ -69,13 +71,13 @@
                             <td>{{ $item->client_address }}</td>
                             <td>
                                 <button type="button" class="btn btn-warning me-2" data-bs-toggle="modal"
-                                    data-bs-target="#editClient{{ $item->client_id }}">
+                                    data-bs-target="#edit{{ $item->client_id }}">
                                     Edit
                                 </button>
 
                                 <!-- Modal Body -->
                                 <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
-                                <div class="modal fade" id="editClient{{ $item->client_id }}" tabindex="-1"
+                                <div class="modal fade" id="edit{{ $item->client_id }}" tabindex="-1"
                                     data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
                                     aria-labelledby="modalTitleId" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md"
@@ -90,14 +92,27 @@
                                                 @method('put')
                                                 @csrf
                                                 <div class="modal-body">
+                                                    @if ($errors->any() && old('id') == $item->client_id)
+                                                        @php
+                                                            notifError($errors->all());
+                                                            $client_name = old('client_name');
+                                                            $client_address = old('client_address');
+                                                        @endphp
+                                                    @else
+                                                        @php
+                                                            $client_name = $item->client_name;
+                                                            $client_address = $item->client_address;
+                                                        @endphp
+                                                    @endif
+                                                    <input type="hidden" name="id" value="{{ $item->client_id }}">
                                                     <div class="form-floating mb-2">
-                                                        <input type="text" name="client_name" autofocus required
+                                                        <input type="text" name="client_name" autofocus
                                                             class="form-control" id="client_name"
-                                                            placeholder="client name" value="{{ $item->client_name }}">
+                                                            placeholder="client name" value="{{ $client_name }}">
                                                         <label for="client_name">Client name</label>
                                                     </div>
                                                     <div class="form-floating mb-2">
-                                                        <textarea class="form-control"id="client_address" name="client_address" required>{{ $item->client_address }}</textarea>
+                                                        <textarea class="form-control"id="client_address" name="client_address" required>{{ $client_address }}</textarea>
                                                         <label for="client_address">Clent Address</label>
                                                     </div>
                                                 </div>

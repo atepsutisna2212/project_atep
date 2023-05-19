@@ -66,6 +66,9 @@ class CClient extends Controller
     public function update(Request $request, MClient $client)
     {
         // dd($client);
+        $request->validate([
+            'id' => 'required'
+        ]);
         $validasi = $request->validate([
             'client_name' => 'required',
             'client_address' => 'required',

@@ -37,6 +37,7 @@ class CUser extends Controller
     {
         // dd($user->email);
         $validasi = $request->validate([
+            'id' => 'required',
             'name' => 'required',
             'email' => [
                 'email',

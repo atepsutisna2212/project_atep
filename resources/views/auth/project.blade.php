@@ -47,22 +47,12 @@
         <form action="/delete-data" method="post">
             @csrf
             <div class="card-header">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProject">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new">
                     New
                 </button>
                 <button type="submit" class="show_confirm ms-2 btn btn-danger">Delete</button>
             </div>
             <div class="card-body">
-                @if ($errors->any())
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
                 <table id="tabel" class="table table-bordered border-dark">
                     <thead class="bg-info">
                         <tr>
@@ -100,7 +90,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="addProject" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+<div class="modal fade" id="new" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="modalTitleId" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md" role="document">
         <div class="modal-content">
@@ -111,33 +101,51 @@
             <form action="/project" method="post">
                 @csrf
                 <div class="modal-body">
+                    @if ($errors->any() && !old('id'))
+                        @php
+                            notifError($errors->all());
+                            $project_name = old('project_name');
+                            $client_id = old('client_id');
+                            $project_start = old('project_start');
+                            $project_end = old('project_end');
+                            $project_status = old('project_status');
+                        @endphp
+                    @else
+                        @php
+                            $project_name = '';
+                            $client_id = '';
+                            $project_start = '';
+                            $project_end = '';
+                            $project_status = '';
+                        @endphp
+                    @endif
                     <div class="form-floating mb-2">
-                        <input type="text" name="project_name" autofocus required class="form-control"
-                            id="project_name" placeholder="Project name" value="{{ old('project_name') }}">
+                        <input type="text" name="project_name" autofocus class="form-control" id="project_name"
+                            placeholder="Project name" value="{{ $project_name }}">
                         <label for="project_name">Project name</label>
                     </div>
                     <select class="form-select mb-2" name="client_id"required>
                         <option value="" selected disabled hidden>-Client-</option>
                         @foreach ($client as $item)
-                            <option {{ $item->client_id == old('client_id') ? 'selected' : '' }}
+                            <option {{ $item->client_id == $client_id ? 'selected' : '' }}
                                 value="{{ $item->client_id }}">{{ $item->client_name }}</option>
                         @endforeach
                     </select>
                     <div class="form-floating mb-2">
                         <input type="date" name="project_start" required class="form-control" id="project_start"
-                            placeholder="Project start" value="{{ old('project_start') }}">
+                            placeholder="Project start" value="{{ $project_start }}">
                         <label for="project_start">Project start</label>
                     </div>
                     <div class="form-floating mb-2">
                         <input type="date" name="project_end" required class="form-control" id="project_end"
-                            placeholder="Project end" value="{{ old('project_end') }}">
+                            placeholder="Project end" value="{{ $project_end }}">
                         <label for="project_end">Project end</label>
                     </div>
                     <select class="form-select" name="project_status"required>
                         <option value="" selected disabled hidden>-Status-</option>
-                        <option {{ 'OPEN' == old('project_status') ? 'selected' : '' }} value="OPEN">OPEN</option>
-                        <option {{ 'DOING' == old('project_status') ? 'selected' : '' }} value="DOING">DOING</option>
-                        <option {{ 'DONE' == old('project_status') ? 'selected' : '' }} value="DONE">DONE</option>
+                        <option {{ 'OPEN' == $project_status ? 'selected' : '' }} value="OPEN">OPEN</option>
+                        <option {{ 'DOING' == $project_status ? 'selected' : '' }} value="DOING">DOING</option>
+                        <option {{ 'DONE' == $project_status ? 'selected' : '' }} value="DONE">DONE</option>
                     </select>
                 </div>
                 <div class="modal-footer">
@@ -164,36 +172,55 @@
                     @method('put')
                     @csrf
                     <div class="modal-body">
+                        @if ($errors->any() && old('id') == $item->project_id)
+                            @php
+                                notifError($errors->all());
+                                $project_name = old('project_name');
+                                $client_id = old('client_id');
+                                $project_start = old('project_start');
+                                $project_end = old('project_end');
+                                $project_status = old('project_status');
+                            @endphp
+                        @else
+                            @php
+                                $project_name = $item->project_name;
+                                $client_id = $item->client_id;
+                                $project_start = $item->project_start;
+                                $project_end = $item->project_end;
+                                $project_status = $item->project_status;
+                            @endphp
+                        @endif
                         <div class="form-floating mb-2">
-                            <input type="text" name="project_name" autofocus required class="form-control"
-                                id="project_name" placeholder="Project name" value="{{ $item->project_name }}">
+                            <input type="text" name="project_name" autofocus class="form-control"
+                                id="project_name" placeholder="Project name" value="{{ $project_name }}">
                             <label for="project_name">Project name</label>
                         </div>
+                        <input type="hidden" name="id" value="{{ $item->project_id }}">
                         <select class="form-select mb-2" name="client_id"required>
                             <option value="" selected disabled hidden>-Client-</option>
                             @foreach ($client as $x)
-                                <option {{ $item->client_id == $x->client_id ? 'selected' : '' }}
+                                <option {{ $client_id == $x->client_id ? 'selected' : '' }}
                                     value="{{ $x->client_id }}">
                                     {{ $x->client_name }}</option>
                             @endforeach
                         </select>
                         <div class="form-floating mb-2">
                             <input type="date" name="project_start" autofocus required class="form-control"
-                                id="project_start" placeholder="Project start" value="{{ $item->project_start }}">
+                                id="project_start" placeholder="Project start" value="{{ $project_start }}">
                             <label for="project_start">Project start</label>
                         </div>
                         <div class="form-floating mb-2">
                             <input type="date" name="project_end" autofocus required class="form-control"
-                                id="project_end" placeholder="Project end" value="{{ $item->project_end }}">
+                                id="project_end" placeholder="Project end" value="{{ $project_end }}">
                             <label for="project_end">Project end</label>
                         </div>
                         <select class="form-select" name="project_status"required>
                             <option value="" selected disabled hidden>-Status-</option>
-                            <option {{ $item->project_status == 'OPEN' ? 'selected' : '' }} value="OPEN">OPEN
+                            <option {{ $project_status == 'OPEN' ? 'selected' : '' }} value="OPEN">OPEN
                             </option>
-                            <option {{ $item->project_status == 'DOING' ? 'selected' : '' }} value="DOING">DOING
+                            <option {{ $project_status == 'DOING' ? 'selected' : '' }} value="DOING">DOING
                             </option>
-                            <option {{ $item->project_status == 'DONE' ? 'selected' : '' }} value="DONE">DONE
+                            <option {{ $project_status == 'DONE' ? 'selected' : '' }} value="DONE">DONE
                             </option>
                         </select>
                     </div>

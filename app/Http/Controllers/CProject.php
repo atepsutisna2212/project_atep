@@ -100,7 +100,9 @@ class CProject extends Controller
     public function update(Request $request, MProject $project)
     {
         // dd($project);
-
+        $request->validate([
+            'id' => 'required'
+        ]);
         $validasi = $request->validate([
             'project_name' => 'required',
             'client_id' => 'required',
